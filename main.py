@@ -4,6 +4,7 @@ import os
 from bs4 import BeautifulSoup
 from pathvalidate import sanitize_filename
 from urllib.parse import urljoin, urlsplit
+from argparse import ArgumentParser
 import json
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
@@ -60,8 +61,14 @@ def download_image(url, folder='images/'):
 
 def main():
     url = 'https://tululu.org'
+    arg_parser = ArgumentParser()
+    arg_parser.add_argument('--start_id', type=int, default=0)
+    arg_parser.add_argument('--end_id', type=int)
+    args = arg_parser.parse_args()
+    if not args.end_id:
+        args.end_id = args.start_id + 10
 
-    for id in range(1, 10):
+    for id in range(args.start_id, args.end_id):
         try:
             response = requests.get(url=urljoin(url, f'b{id}/'))
             response.raise_for_status()
