@@ -5,7 +5,6 @@ from bs4 import BeautifulSoup
 from pathvalidate import sanitize_filename
 from urllib.parse import urljoin, urlsplit
 from argparse import ArgumentParser
-import json
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
@@ -76,9 +75,8 @@ def main():
 
             parsed_book = parse_book_page(response.text)
 
-            # download_txt(url=urljoin(url, f'/txt.php?id={id}'), filename=title)
-            # download_image(image_url)
-            print(json.dumps(parsed_book, indent=4, ensure_ascii=False))
+            download_txt(url=urljoin(url, f'/txt.php?id={id}'), filename=parsed_book['title'])
+            download_image(parsed_book['image_url'])
 
         except requests.exceptions.HTTPError:
             print(f'HTTP_error or redirect on id = {id}')
