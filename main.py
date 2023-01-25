@@ -1,3 +1,4 @@
+import time
 import requests
 import urllib3
 import os
@@ -20,7 +21,9 @@ def parse_book_page(html_content, url):
     header_book = soup.find('div', {'id': 'content'}).find('h1').text
     title, author = list(map(lambda el: el.strip(), header_book.split('::')))
 
-    image_url = urljoin(url, soup.find('div', {'id': 'content'}).find('div', {'class': 'bookimage'}).find('img').get('src'))
+    image_block = soup.find('div', {'id': 'content'}).find('div', {'class': 'bookimage'}).find('img').get('src')
+    image_url = urljoin(url, image_block)
+
     text = soup.find('div', {'id': 'content'}).find_all('table', {'class': 'd_book'})[-1].text.strip()
 
     comment_block = soup.find('div', {'id': 'content'}).find_all('div', {'class': 'texts'})
@@ -42,7 +45,7 @@ def parse_book_page(html_content, url):
 def download_txt(url, filename, folder='books/', params=None):
     os.makedirs(folder, exist_ok=True)
 
-    upd_filename = sanitize_filename(filename) + '.txt'
+    upd_filename = f'{sanitize_filename(filename)}.txt'
     response = requests.get(url=url, params=params)
     response.raise_for_status()
     check_for_redirect(response)
@@ -68,16 +71,16 @@ def download_image(url, folder='images/'):
 
 def main():
     url = 'https://tululu.org'
-    arg_parser = ArgumentParser()
+    arg_parser = ArgumentParser(description='Получает множество id, промежуток которого задаёт пользователь')
     arg_parser.add_argument('--start_id', type=int, default=0, help='С этого id начинается скачивание книг')
     arg_parser.add_argument('--end_id', type=int, help='До этого id скачиваются книги')
     args = arg_parser.parse_args()
     if not args.end_id:
         args.end_id = args.start_id + 10
 
-    for id_book in range(args.start_id, args.end_id):
-        url_book = urljoin(url, f'b{id_book}/')
-        payload = {'id': id_book}
+    for book_id in range(args.start_id, args.end_id):
+        url_book = urljoin(url, f'b{book_id}/')
+        payload = {'id': book_id}
         try:
             response = requests.get(url=url_book)
             response.raise_for_status()
@@ -89,10 +92,11 @@ def main():
             download_image(parsed_book['image_url'])
 
         except requests.exceptions.HTTPError:
-            print(f'HTTP_error or redirect on id = {id_book}')
+            print(f'HTTP_error or redirect on id = {book_id}')
 
         except requests.exceptions.ConnectionError as connection_error:
             print(str(connection_error))
+            time.sleep(10)
 
 
 if __name__ == '__main__':
