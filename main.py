@@ -21,16 +21,16 @@ def parse_book_page(html_content, url):
     header_book = soup.find('div', {'id': 'content'}).find('h1').text
     title, author = list(map(lambda el: el.strip(), header_book.split('::')))
 
-    image_block = soup.find('div', {'id': 'content'}).find('div', {'class': 'bookimage'}).find('img').get('src')
+    image_block = soup.find('div', class_='bookimage').find('img')['src']
     image_url = urljoin(url, image_block)
 
-    text = soup.find('div', {'id': 'content'}).find_all('table', {'class': 'd_book'})[-1].text.strip()
+    text = soup.find('div', id='content').find_all('table', class_='d_book')[-1].text.strip()
 
-    comment_block = soup.find('div', {'id': 'content'}).find_all('div', {'class': 'texts'})
-    comments = list(map(lambda el: el.find('span', {'class': 'black'}).text.strip(), comment_block))
+    comment_block = soup.find_all('div', class_='texts')
+    comments = [comment.find('span', class_='black').text.strip() for comment in comment_block]
 
-    genres_block = soup.find('div', {'id': 'content'}).find('span', {'class': 'd_book'}).find_all('a')
-    genres = list(map(lambda el: el.text.strip(), genres_block))
+    genres_block = soup.find('span', class_='d_book').find_all('a')
+    genres = [genre.text.strip() for genre in genres_block]
 
     return {
         'title': title,
