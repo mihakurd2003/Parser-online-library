@@ -8,7 +8,7 @@ from main import parse_book_page, download_txt, download_image, check_for_redire
 def get_book_id(html_content):
     soup = BeautifulSoup(html_content, 'lxml')
 
-    book_blocks = soup.find_all('table', class_='d_book')
+    book_blocks = soup.select('table.d_book')
     urls_book = [block.find('a')['href'] for block in book_blocks]
     return urls_book
 
