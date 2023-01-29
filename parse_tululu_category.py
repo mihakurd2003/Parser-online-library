@@ -2,7 +2,8 @@ import requests
 from bs4 import BeautifulSoup
 from urllib.parse import urljoin
 import json
-from main import parse_book_page, download_txt, download_image, check_for_redirect
+import argparse
+from main import parse_book_page, download_txt, download_image
 
 
 def get_book_id(html_content):
@@ -14,8 +15,13 @@ def get_book_id(html_content):
 
 
 def main():
+    parser = argparse.ArgumentParser(description='Получает множество номеров страниц, промежуток которого задаёт пользователь')
+    parser.add_argument('--start_page', type=int, default=0, help='С этого номера страницы начинается скачивание книг')
+    parser.add_argument('--end_page', type=int, default=701, help='До этого номера страницы скачиваются книги')
+    args = parser.parse_args()
+
     books = []
-    for page in range(1, 5):
+    for page in range(args.start_page, args.end_page):
         url = f'https://tululu.org/l55/{page}/'
         try:
             response_page = requests.get(url=url)
