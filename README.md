@@ -26,3 +26,14 @@ pip install -r requirements.txt
 python3 main.py --start_id <начальный id> --end_id <конечный id>
 ```
 - Получает книги в промежутке от start_id до end_id. По умолчанию start_id равен 0, end_id равен start_id + 10
+### Как пользоваться файлом parse_tululu_category.py
+- В терминале набирайте команду:
+```
+python3 parse_tululu_category.py --start_page <начальный номер страницы> --end_page <конечный номер страницы>
+```
+- Скачивает книги по страницам в промежутке от start_page до end_page(включительно). По умолчанию start_page равен 0, end_page равен 701
+### Дополнительные аргументы к parse_tululu_category.py
+- --dest_folder: Путь до директории, в которой будут расположены такие папки, как "books/", "images/"
+- --json_path: Путь до файла *.json; Пример: C:/Desktop/.../\*.json
+- --skip_imgs: Пропускает скачивание картинок. Если указан, то пропускает скачивание
+- --skip_txt: Пропускает скачивание книг. Если указан, то пропускает скачивание
