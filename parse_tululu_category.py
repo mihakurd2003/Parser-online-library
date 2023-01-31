@@ -1,19 +1,20 @@
 import os
-
+import sys
+import time
 import requests
 from bs4 import BeautifulSoup
 from urllib.parse import urljoin
 import json
 import argparse
-from main import parse_book_page, download_txt, download_image
+from main import parse_book_page, download_txt, download_image, check_for_redirect
 
 
 def get_book_id(html_content):
     soup = BeautifulSoup(html_content, 'lxml')
 
     book_blocks = soup.select('table.d_book')
-    urls_book = [block.find('a')['href'] for block in book_blocks]
-    return urls_book
+    book_urls = [block.find('a')['href'] for block in book_blocks]
+    return book_urls
 
 
 def main():
@@ -30,40 +31,49 @@ def main():
     for page in range(args.start_page, args.end_page + 1):
         url = f'https://tululu.org/l55/{page}/'
         try:
-            response_page = requests.get(url=url)
-            response_page.raise_for_status()
+            page_response = requests.get(url=url)
+            page_response.raise_for_status()
+            check_for_redirect(page_response)
 
-            for book_id in get_book_id(response_page.text):
-                payload = {'id': book_id[2:-1]}
-                url_book = urljoin(url, book_id)
+            book_urls = get_book_id(page_response.text)
+            for book_address in book_urls:
+                payload = {'id': book_address[2:-1]}
+                book_url = urljoin(url, book_address)
                 try:
-                    response_book = requests.get(url=url_book)
-                    response_book.raise_for_status()
+                    book_response = requests.get(url=book_url)
+                    book_response.raise_for_status()
+                    check_for_redirect(book_response)
 
-                    parsed_book = parse_book_page(response_book.text, url_book)
+                    parsed_book = parse_book_page(book_response.text, book_url)
                     if not args.skip_imgs:
                         download_image(parsed_book['image_url'], folder=os.path.join(args.dest_folder, 'images/'))
                     if not args.skip_txt:
                         download_txt(
-                            url=urljoin(url_book, '/txt.php'),
+                            url=urljoin(book_url, '/txt.php'),
                             params=payload,
                             filename=parsed_book['title'],
                             folder=os.path.join(args.dest_folder, 'books/')
                         )
                     books.append(parsed_book)
                 except requests.exceptions.HTTPError:
-                    print(f'Error in {url_book}')
+                    print(f'HTTP Error in {book_url}', file=sys.stderr)
+
+                except requests.exceptions.ConnectionError:
+                    print(f'Connection Error in {book_url}', file=sys.stderr)
+                    time.sleep(10)
                     continue
 
-        except requests.exceptions.HTTPError as err:
-            print(f'Error in {page} page')
+        except requests.exceptions.HTTPError:
+            print(f'HTTP Error in {page} page', file=sys.stderr)
 
-    if args.json_path:
-        with open(f'{args.json_path}', 'w', encoding='utf-8') as file:
-            json.dump(books, file, indent=4, ensure_ascii=False)
-        return
+        except requests.exceptions.ConnectionError:
+            print(f'Connection Error in {page} page', file=sys.stderr)
+            time.sleep(10)
+            continue
 
-    with open(os.path.join(args.dest_folder, 'books.json'), 'w', encoding='utf-8') as file:
+    path = args.json_path if args.json_path else os.path.join(args.dest_folder, 'books.json')
+
+    with open(path, 'w', encoding='utf-8') as file:
         json.dump(books, file, indent=4, ensure_ascii=False)
 
 

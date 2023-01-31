@@ -1,3 +1,4 @@
+import sys
 import time
 import requests
 import urllib3
@@ -92,10 +93,10 @@ def main():
             download_image(parsed_book['image_url'])
 
         except requests.exceptions.HTTPError:
-            print(f'HTTP_error or redirect on id = {book_id}')
+            print(f'HTTP_error or redirect on id = {book_id}', file=sys.stderr)
 
         except requests.exceptions.ConnectionError as connection_error:
-            print(str(connection_error))
+            print(str(connection_error), file=sys.stderr)
             time.sleep(10)
 
 
