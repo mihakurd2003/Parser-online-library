@@ -35,7 +35,7 @@ def main():
             page_response.raise_for_status()
             check_for_redirect(page_response)
 
-            book_urls = get_book_id(page_response.text)
+            book_urls = get_book_urls(page_response.text)
             for book_address in book_urls:
                 payload = {'id': book_address[2:-1]}
                 book_url = urljoin(url, book_address)
