@@ -9,7 +9,7 @@ import argparse
 from main import parse_book_page, download_txt, download_image, check_for_redirect
 
 
-def get_book_id(html_content):
+def get_book_urls(html_content):
     soup = BeautifulSoup(html_content, 'lxml')
 
     book_blocks = soup.select('table.d_book')
