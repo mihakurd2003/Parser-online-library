@@ -3,6 +3,7 @@ from jinja2 import Environment, FileSystemLoader, select_autoescape
 import json
 from urllib.parse import urlsplit
 from more_itertools import chunked
+import re
 
 
 def main():
@@ -18,6 +19,7 @@ def main():
 
     for book in books:
         book['image_url'] = urlsplit(book['image_url']).path.split('/')[-1]
+        book['url_book'] = re.sub(r'[^\w_ -]', '', book['title'])
 
     books = list(chunked(books, 2))
 
@@ -25,7 +27,7 @@ def main():
         books=books,
     )
 
-    with open('index.html', 'w', encoding="utf-8") as file:
+    with open('index.html', 'w', encoding="UTF-8") as file:
         file.write(rendered_page)
 
     server = HTTPServer(('0.0.0.0', 8000), SimpleHTTPRequestHandler)

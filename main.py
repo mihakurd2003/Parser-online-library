@@ -53,7 +53,7 @@ def download_txt(url, filename, folder='books/', params=None):
 
     path = os.path.join(folder, upd_filename)
 
-    with open(path, 'w', encoding='utf-8') as file:
+    with open(path, 'w', encoding='UTF-8') as file:
         file.write(response.text)
 
     return path

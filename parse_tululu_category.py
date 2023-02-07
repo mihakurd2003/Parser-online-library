@@ -73,7 +73,7 @@ def main():
 
     path = args.json_path if args.json_path else os.path.join(args.dest_folder, 'books.json')
 
-    with open(path, 'w', encoding='utf-8') as file:
+    with open(path, 'w', encoding='UTF-8') as file:
         json.dump(books, file, indent=4, ensure_ascii=False)
 
 
