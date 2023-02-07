@@ -2,6 +2,7 @@ from jinja2 import Environment, FileSystemLoader, select_autoescape
 import json
 from urllib.parse import urlsplit
 from livereload import Server
+from more_itertools import chunked
 
 
 def rebuild_page():
@@ -17,6 +18,8 @@ def rebuild_page():
 
     for book in books:
         book['image_url'] = urlsplit(book['image_url']).path.split('/')[-1]
+
+    books = list(chunked(books, 2))
 
     rendered_page = template.render(
         books=books,
