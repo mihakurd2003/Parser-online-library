@@ -21,13 +21,13 @@
           <div class="row no-gutters">
             <div class="col-md-4">
               <img alt="&quot;{{ book['title'] }}&quot;, {{ book['author'] }}" class="card-img"
-                   src="images/{{ book['image_url'] }}">
+                   src="../images/{{ book['image_url'] }}">
             </div>
             <div class="col-md-8">
               <div class="card-body">
                 <h5 class="card-title">{{ book['title'] }}</h5>
                 <p class="card-text">{{ book['author'] }}</p>
-                <p class="card-text"><a href="books/{{ book['url_book'] }}.txt" target="_blank">читать</a></p>
+                <p class="card-text"><a href="../books/{{ book['url_book'] }}.txt" target="_blank">читать</a></p>
               </div>
             </div>
           </div>
