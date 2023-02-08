@@ -12,31 +12,67 @@
   <title>Tululu parser</title>
 </head>
 <body>
-<div class="container">
-  {% for book_chunk in books %}
-  <div class="row">
-    {% for book in book_chunk %}
-      <div class="col">
-        <div class="card mb-3 mx-auto" style="max-width: 540px;">
-          <div class="row no-gutters">
-            <div class="col-md-4">
-              <img alt="&quot;{{ book['title'] }}&quot;, {{ book['author'] }}" class="card-img"
-                   src="../images/{{ book['image_url'] }}">
-            </div>
-            <div class="col-md-8">
-              <div class="card-body">
-                <h5 class="card-title">{{ book['title'] }}</h5>
-                <p class="card-text">{{ book['author'] }}</p>
-                <p class="card-text"><a href="../books/{{ book['url_book'] }}.txt" target="_blank">читать</a></p>
+  <div class="container">
+    <nav aria-label="...">
+      <ul class="pagination">
+        {% if curr_page_num > 1 %}
+          <li class="page-item">
+            <a class="page-link" tabindex="-1" href="index{{curr_page_num-1}}.html">Предыдущая</a>
+          </li>
+        {% else %}
+          <li class="page-item disabled">
+            <a class="page-link" tabindex="-1" aria-disabled="true" href="#">Предыдущая</a>
+          </li>
+        {% endif %}
+
+        {% for num_page in range(page_count) %}
+          {% if num_page+1 == curr_page_num %}
+            <li class="page-item active" aria-current="page">
+              <a class="page-link" href="index{{num_page+1}}.html">{{ num_page+1 }}<span class="sr-only">(current)</span></a>
+            </li>
+          {% else %}
+            <li class="page-item">
+              <a class="page-link" href="index{{num_page+1}}.html">{{ num_page+1 }}</a>
+            </li>
+          {% endif %}
+        {% endfor %}
+
+        {% if curr_page_num < page_count %}
+          <li class="page-item">
+            <a class="page-link" tabindex="-1" href="index{{curr_page_num+1}}.html">Следующая</a>
+          </li>
+        {% else %}
+          <li class="page-item disabled">
+            <a class="page-link" tabindex="-1" aria-disabled="true" href="#">Следующая</a>
+          </li>
+        {% endif %}
+      </ul>
+    </nav>
+
+    {% for book_chunk in books %}
+    <div class="row">
+      {% for book in book_chunk %}
+        <div class="col">
+          <div class="card mb-3 mx-auto" style="max-width: 540px;">
+            <div class="row no-gutters">
+              <div class="col-md-4">
+                <img alt="&quot;{{ book['title'] }}&quot;, {{ book['author'] }}" class="card-img"
+                     src="../images/{{ book['image_url'] }}">
+              </div>
+              <div class="col-md-8">
+                <div class="card-body">
+                  <h5 class="card-title">{{ book['title'] }}</h5>
+                  <p class="card-text">{{ book['author'] }}</p>
+                  <p class="card-text"><a href="../books/{{ book['url_book'] }}.txt" target="_blank">читать</a></p>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
+      {% endfor %}
+    </div>
     {% endfor %}
   </div>
-  {% endfor %}
-</div>
 
 <script crossorigin="anonymous"
         integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"

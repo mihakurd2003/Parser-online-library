@@ -24,11 +24,15 @@ def main():
         book['image_url'] = urlsplit(book['image_url']).path.split('/')[-1]
         book['url_book'] = re.sub(r'[^\w_ -]', '', book['title'])
 
-    books = list(chunked(list(chunked(books, 2)), 10))
+    page_elements_count = 10
+    books = list(chunked(list(chunked(books, 2)), page_elements_count))
+    page_count = len(books)
 
     for num_page, books_on_page in enumerate(books):
         rendered_page = template.render(
             books=books_on_page,
+            page_count=page_count,
+            curr_page_num=num_page + 1,
         )
 
         with open(f'pages/index{num_page+1}.html', 'w', encoding="UTF-8") as file:
