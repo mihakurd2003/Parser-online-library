@@ -141,6 +141,5 @@ cython_debug/
 
 books/
 images/
-pages/
 .idea/
 index.html
