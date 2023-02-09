@@ -140,6 +140,5 @@ dmypy.json
 cython_debug/
 
 books/
-images/
 .idea/
 index.html
