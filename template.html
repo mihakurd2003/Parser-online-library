@@ -14,7 +14,7 @@
 <body>
   <div class="container">
     <nav aria-label="...">
-      <ul class="pagination">
+      <ul class="pagination justify-content-center p-md-2">
         {% if curr_page_num > 1 %}
           <li class="page-item">
             <a class="page-link" tabindex="-1" href="index{{curr_page_num-1}}.html">Предыдущая</a>
@@ -53,7 +53,7 @@
     <div class="row">
       {% for book in book_chunk %}
         <div class="col">
-          <div class="card mb-3 mx-auto" style="max-width: 540px;">
+          <div class="card mb-3 mx-auto" style="max-width: 500px;">
             <div class="row no-gutters">
               <div class="col-md-4">
                 <img alt="&quot;{{ book['title'] }}&quot;, {{ book['author'] }}" class="card-img"
@@ -63,6 +63,9 @@
                 <div class="card-body">
                   <h5 class="card-title">{{ book['title'] }}</h5>
                   <p class="card-text">{{ book['author'] }}</p>
+                  {% for genre in book['genres'] %}
+                    <span class="badge badge-secondary">{{ genre }}</span>
+                  {% endfor %}
                   <p class="card-text"><a href="../books/{{ book['url_book'] }}.txt" target="_blank">читать</a></p>
                 </div>
               </div>
