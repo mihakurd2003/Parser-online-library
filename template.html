@@ -8,8 +8,8 @@
   <!-- Bootstrap CSS -->
   <link crossorigin="anonymous" href="../static/bootstrap.min.css" rel="stylesheet">
 
-  <link rel="icon" href="../media/favicon.ico">
-  <title href="../media/favicon.ico">Tululu parser</title>
+  <link rel="icon" href="../static/favicon.ico">
+  <title>Tululu parser</title>
 </head>
 <body>
   <div class="container">
@@ -57,7 +57,7 @@
             <div class="row no-gutters">
               <div class="col-md-4">
                 <img alt="&quot;{{ book['title'] }}&quot;, {{ book['author'] }}" class="card-img"
-                     src="../images/{{ book['image_url'] }}">
+                     src="../media/{{ book['image_url'] }}">
               </div>
               <div class="col-md-8">
                 <div class="card-body">
@@ -66,7 +66,7 @@
                   {% for genre in book['genres'] %}
                     <span class="badge badge-secondary">{{ genre }}</span>
                   {% endfor %}
-                  <p class="card-text"><a href="../books/{{ book['url_book'] }}.txt" target="_blank">читать</a></p>
+                  <p class="card-text"><a href="../media/{{ book['url_book'] }}.txt" target="_blank">читать</a></p>
                 </div>
               </div>
             </div>

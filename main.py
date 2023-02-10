@@ -43,7 +43,7 @@ def parse_book_page(html_content, url):
     }
 
 
-def download_txt(url, filename, folder='books/', params=None):
+def download_txt(url, filename, folder='media/', params=None):
     os.makedirs(folder, exist_ok=True)
 
     upd_filename = f'{sanitize_filename(filename)}.txt'
@@ -59,7 +59,7 @@ def download_txt(url, filename, folder='books/', params=None):
     return path
 
 
-def download_image(url, folder='images/'):
+def download_image(url, folder='media/'):
     os.makedirs(folder, exist_ok=True)
 
     filename = urlsplit(url).path.split('/')[-1]

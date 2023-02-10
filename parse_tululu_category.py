@@ -46,13 +46,13 @@ def main():
 
                     parsed_book = parse_book_page(book_response.text, book_url)
                     if not args.skip_imgs:
-                        download_image(parsed_book['image_url'], folder=os.path.join(args.dest_folder, 'images/'))
+                        download_image(parsed_book['image_url'], folder=os.path.join(args.dest_folder, 'media/'))
                     if not args.skip_txt:
                         download_txt(
                             url=urljoin(book_url, '/txt.php'),
                             params=payload,
                             filename=parsed_book['title'],
-                            folder=os.path.join(args.dest_folder, 'books/')
+                            folder=os.path.join(args.dest_folder, 'media/')
                         )
                     books.append(parsed_book)
                 except requests.exceptions.HTTPError:

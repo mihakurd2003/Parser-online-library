@@ -1,13 +1,13 @@
-import os
-from http.server import HTTPServer, SimpleHTTPRequestHandler
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 import json
 from urllib.parse import urlsplit
+from livereload import Server
 from more_itertools import chunked
+import os
 import re
 
 
-def main():
+def rebuild_page():
     env = Environment(
         loader=FileSystemLoader('.'),
         autoescape=select_autoescape(['html', 'xml'])
@@ -38,8 +38,14 @@ def main():
         with open(f'pages/index{num_page+1}.html', 'w', encoding="UTF-8") as file:
             file.write(rendered_page)
 
-    server = HTTPServer(('0.0.0.0', 8000), SimpleHTTPRequestHandler)
-    server.serve_forever()
+
+def main():
+    rebuild_page()
+
+    server = Server()
+
+    server.watch('template.html', rebuild_page)
+    server.serve(root='.')
 
 
 if __name__ == '__main__':
