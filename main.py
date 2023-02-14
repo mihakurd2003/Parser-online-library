@@ -1,11 +1,12 @@
 import sys
 import time
-import requests
 import urllib3
 import os
-from bs4 import BeautifulSoup
-from pathvalidate import sanitize_filename
 from urllib.parse import urljoin, urlsplit
+from pathvalidate import sanitize_filename
+
+import requests
+from bs4 import BeautifulSoup
 from argparse import ArgumentParser
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)

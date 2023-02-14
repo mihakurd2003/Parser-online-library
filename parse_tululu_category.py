@@ -1,11 +1,13 @@
 import os
 import sys
 import time
-import requests
-from bs4 import BeautifulSoup
 from urllib.parse import urljoin
+
 import json
 import argparse
+import requests
+from bs4 import BeautifulSoup
+
 from main import parse_book_page, download_txt, download_image, check_for_redirect
 
 

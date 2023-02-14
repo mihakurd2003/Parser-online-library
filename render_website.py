@@ -1,10 +1,12 @@
-from jinja2 import Environment, FileSystemLoader, select_autoescape
-import json
-from urllib.parse import urlsplit
-from livereload import Server
-from more_itertools import chunked
 import os
 import re
+import json
+from urllib.parse import urlsplit
+
+from livereload import Server
+from more_itertools import chunked
+from argparse import ArgumentParser
+from jinja2 import Environment, FileSystemLoader, select_autoescape
 
 
 def rebuild_page():
@@ -15,27 +17,31 @@ def rebuild_page():
 
     template = env.get_template('template.html')
 
-    with open('books.json', 'r', encoding='UTF-8') as file:
-        books = json.loads(file.read())
+    arg_parser = ArgumentParser(description='Позволяет указать свой путь к файлу .json')
+    arg_parser.add_argument('--path', default='books.json', help='Путь до файла .json')
+    args = arg_parser.parse_args()
+
+    with open(args.path, 'r', encoding='UTF-8') as file:
+        books_info = json.load(file)
 
     os.makedirs('pages', exist_ok=True)
 
-    for book in books:
-        book['image_url'] = urlsplit(book['image_url']).path.split('/')[-1]
-        book['url_book'] = re.sub(r'[^\w_ -]', '', book['title'])
+    for book_info in books_info:
+        book_info['image_url'] = urlsplit(book_info['image_url']).path.split('/')[-1]
+        book_info['url_book'] = re.sub(r'[^\w_ -]', '', book_info['title'])
 
-    page_elements_count = 10
-    books = list(chunked(list(chunked(books, 2)), page_elements_count))
-    page_count = len(books)
+    columns_count, page_elements_count = 2, 10
+    chunked_books_info = list(chunked(list(chunked(books_info, columns_count)), page_elements_count))
+    page_count = len(chunked_books_info)
 
-    for num_page, books_on_page in enumerate(books):
+    for num_page, books_on_page in enumerate(chunked_books_info, start=1):
         rendered_page = template.render(
             books=books_on_page,
             page_count=page_count,
-            curr_page_num=num_page + 1,
+            curr_page_num=num_page,
         )
 
-        with open(f'pages/index{num_page+1}.html', 'w', encoding="UTF-8") as file:
+        with open(f'pages/index{num_page}.html', 'w', encoding='UTF-8') as file:
             file.write(rendered_page)
 
 
@@ -43,7 +49,6 @@ def main():
     rebuild_page()
 
     server = Server()
-
     server.watch('template.html', rebuild_page)
     server.serve(root='.')
 
