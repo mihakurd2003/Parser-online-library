@@ -12,7 +12,7 @@ python3 -m venv <название окружения>
 <название окружения>\Scripts\activate.bat
 ```
 ```
-git clone https://github.com/mihakurd2003/space.git
+git clone https://github.com/mihakurd2003/Parser-online-library.git
 ```
 
 Python3 должен быть уже установлен. 
