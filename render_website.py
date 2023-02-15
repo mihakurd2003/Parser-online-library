@@ -1,12 +1,20 @@
+import json
 import os
 import re
-import json
+from argparse import ArgumentParser
 from urllib.parse import urlsplit
 
+from jinja2 import Environment, FileSystemLoader, select_autoescape
 from livereload import Server
 from more_itertools import chunked
-from argparse import ArgumentParser
-from jinja2 import Environment, FileSystemLoader, select_autoescape
+
+
+def parse_argument(argument):
+    arg_parser = ArgumentParser(description='Позволяет указать свой путь к файлу .json')
+    arg_parser.add_argument(argument, default='books.json', help='Путь до файла .json')
+    args = arg_parser.parse_args()
+
+    return args
 
 
 def rebuild_page():
@@ -17,24 +25,22 @@ def rebuild_page():
 
     template = env.get_template('template.html')
 
-    arg_parser = ArgumentParser(description='Позволяет указать свой путь к файлу .json')
-    arg_parser.add_argument('--path', default='books.json', help='Путь до файла .json')
-    args = arg_parser.parse_args()
+    args = parse_argument('--path')
 
     with open(args.path, 'r', encoding='UTF-8') as file:
-        books_info = json.load(file)
+        book_cards = json.load(file)
 
     os.makedirs('pages', exist_ok=True)
 
-    for book_info in books_info:
-        book_info['image_url'] = urlsplit(book_info['image_url']).path.split('/')[-1]
-        book_info['url_book'] = re.sub(r'[^\w_ -]', '', book_info['title'])
+    for book_card in book_cards:
+        book_card['image_url'] = urlsplit(book_card['image_url']).path.split('/')[-1]
+        book_card['url_book'] = re.sub(r'[^\w_ -]', '', book_card['title'])
 
-    columns_count, page_elements_count = 2, 10
-    chunked_books_info = list(chunked(list(chunked(books_info, columns_count)), page_elements_count))
-    page_count = len(chunked_books_info)
+    columns_count, book_cards_count = 2, 10
+    chunked_book_cards = list(chunked(list(chunked(book_cards, columns_count)), book_cards_count))
+    page_count = len(chunked_book_cards)
 
-    for num_page, books_on_page in enumerate(chunked_books_info, start=1):
+    for num_page, books_on_page in enumerate(chunked_book_cards, start=1):
         rendered_page = template.render(
             books=books_on_page,
             page_count=page_count,

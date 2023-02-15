@@ -1,14 +1,15 @@
+import argparse
+import json
 import os
 import sys
 import time
 from urllib.parse import urljoin
 
-import json
-import argparse
 import requests
 from bs4 import BeautifulSoup
 
-from main import parse_book_page, download_txt, download_image, check_for_redirect
+from main import (check_for_redirect, download_image, download_txt,
+                  parse_book_page)
 
 
 def get_book_urls(html_content):

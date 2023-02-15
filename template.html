@@ -1,87 +1,87 @@
 <!doctype html>
 <html lang="ru">
-<head>
-  <!-- Required meta tags -->
-  <meta charset="UTF-8">
-  <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
 
-  <!-- Bootstrap CSS -->
-  <link crossorigin="anonymous" href="../static/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap CSS -->
+    <link crossorigin="anonymous" href="../static/bootstrap.min.css" rel="stylesheet">
 
-  <link href="../static/favicon.ico" rel="icon">
-  <title>Tululu parser</title>
-</head>
-<body>
-  <div class="container">
-    <nav aria-label="...">
-      <ul class="pagination justify-content-center p-md-2">
-        {% if curr_page_num > 1 %}
-          <li class="page-item">
-            <a class="page-link" href="index{{curr_page_num-1}}.html" tabindex="-1">Предыдущая</a>
-          </li>
-        {% else %}
-          <li class="page-item disabled">
-            <a aria-disabled="true" class="page-link" href="#" tabindex="-1">Предыдущая</a>
-          </li>
-        {% endif %}
-
-        {% for num_page in range(page_count) %}
-          {% if num_page+1 == curr_page_num %}
-            <li aria-current="page" class="page-item active">
-              <a class="page-link" href="index{{num_page+1}}.html">{{ num_page+1 }}<span class="sr-only">(current)</span></a>
+    <link href="../static/favicon.ico" rel="icon">
+    <title>Tululu parser</title>
+  </head>
+  <body>
+    <div class="container">
+      <nav aria-label="...">
+        <ul class="pagination justify-content-center p-md-2">
+          {% if curr_page_num > 1 %}
+            <li class="page-item">
+              <a class="page-link" href="index{{curr_page_num-1}}.html" tabindex="-1">Предыдущая</a>
             </li>
           {% else %}
-            <li class="page-item">
-              <a class="page-link" href="index{{num_page+1}}.html">{{ num_page+1 }}</a>
+            <li class="page-item disabled">
+              <a aria-disabled="true" class="page-link" href="#" tabindex="-1">Предыдущая</a>
             </li>
           {% endif %}
-        {% endfor %}
 
-        {% if curr_page_num < page_count %}
-          <li class="page-item">
-            <a class="page-link" href="index{{curr_page_num+1}}.html" tabindex="-1">Следующая</a>
-          </li>
-        {% else %}
-          <li class="page-item disabled">
-            <a aria-disabled="true" class="page-link" href="#" tabindex="-1">Следующая</a>
-          </li>
-        {% endif %}
-      </ul>
-    </nav>
+          {% for num_page in range(page_count) %}
+            {% if num_page+1 == curr_page_num %}
+              <li aria-current="page" class="page-item active">
+                <a class="page-link" href="index{{num_page+1}}.html">{{ num_page+1 }}<span class="sr-only">(current)</span></a>
+              </li>
+            {% else %}
+              <li class="page-item">
+                <a class="page-link" href="index{{num_page+1}}.html">{{ num_page+1 }}</a>
+              </li>
+            {% endif %}
+          {% endfor %}
 
-    {% for book_chunk in books %}
-      <div class="row">
-        {% for book in book_chunk %}
-          <div class="col">
-            <div class="card mb-3 mx-auto" style="max-width: 500px;">
-              <div class="row no-gutters">
-                <div class="col-md-4">
-                  <img alt="&quot;{{ book['title'] }}&quot;, {{ book['author'] }}" class="card-img"
-                       src="../media/images/{{ book['image_url']|urlencode }}">
-                </div>
-                <div class="col-md-8">
-                  <div class="card-body">
-                    <h5 class="card-title">{{ book['title'] }}</h5>
-                    <p class="card-text">{{ book['author'] }}</p>
-                    {% for genre in book['genres'] %}
-                      <span class="badge badge-secondary">{{ genre }}</span>
-                    {% endfor %}
-                    <p class="card-text"><a href="../media/books/{{ book['url_book']|urlencode }}.txt" target="_blank">читать</a></p>
+          {% if curr_page_num < page_count %}
+            <li class="page-item">
+              <a class="page-link" href="index{{curr_page_num+1}}.html" tabindex="-1">Следующая</a>
+            </li>
+          {% else %}
+            <li class="page-item disabled">
+              <a aria-disabled="true" class="page-link" href="#" tabindex="-1">Следующая</a>
+            </li>
+          {% endif %}
+        </ul>
+      </nav>
+
+      {% for book_chunk in books %}
+        <div class="row">
+          {% for book in book_chunk %}
+            <div class="col">
+              <div class="card mb-3 mx-auto" style="max-width: 500px;">
+                <div class="row no-gutters">
+                  <div class="col-md-4">
+                    <img alt="&quot;{{ book['title'] }}&quot;, {{ book['author'] }}" class="card-img"
+                         src="../media/images/{{ book['image_url']|urlencode }}">
+                  </div>
+                  <div class="col-md-8">
+                    <div class="card-body">
+                      <h5 class="card-title">{{ book['title'] }}</h5>
+                      <p class="card-text">{{ book['author'] }}</p>
+                      {% for genre in book['genres'] %}
+                        <span class="badge badge-secondary">{{ genre }}</span>
+                      {% endfor %}
+                      <p class="card-text"><a href="../media/books/{{ book['url_book']|urlencode }}.txt" target="_blank">читать</a></p>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
-        {% endfor %}
-      </div>
-    {% endfor %}
-  </div>
+          {% endfor %}
+        </div>
+      {% endfor %}
+    </div>
 
-  <script crossorigin="anonymous"
-          src="../static/jquery-3.5.1.slim.min.js"></script>
-  <script crossorigin="anonymous"
-          src="../static/popper.min.js"></script>
-  <script crossorigin="anonymous"
-          src="../static/bootstrap.min.js"></script>
-</body>
+    <script crossorigin="anonymous"
+            src="../static/jquery-3.5.1.slim.min.js"></script>
+    <script crossorigin="anonymous"
+            src="../static/popper.min.js"></script>
+    <script crossorigin="anonymous"
+            src="../static/bootstrap.min.js"></script>
+  </body>
 </html>
